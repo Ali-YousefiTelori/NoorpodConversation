@@ -1,0 +1,2184 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:helper="clr-namespace:NoorpodConversation.ViewModels.Helpers;assembly=NoorpodConversation.ViewModels"
+                    xmlns:conv="clr-namespace:NoorpodConversation.ViewModels.Converters;assembly=NoorpodConversation.ViewModels"
+                    xmlns:uc="clr-namespace:NoorpodConversation.UI.Views.Controls"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <conv:ValidationErrorsToFirstErrorContentConverter x:Key="ValidationErrorsToFirstErrorContentConverter"/>
+    <conv:IsValidationWarningConverter x:Key="IsValidationWarningConverter"/>
+    <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <!--Validation-->
+    <ControlTemplate x:Key="ValidationToolTipTemplate">
+        <Border x:Name="Root" BorderThickness="1" CornerRadius="5" Background="Black">
+            <StackPanel Orientation="Horizontal">
+                <ContentControl VerticalAlignment="Top" Focusable="False" Template="{DynamicResource TimeLineAlarmFlesh_TemplateStyle}" Height="16" Margin="5,5,0,5" Foreground="White"/>
+                <!--<TextBlock Style="{x:Null}" VerticalAlignment="Center" TextWrapping="Wrap" FlowDirection="{DynamicResource RightToLeftStyle}" FontFamily="{DynamicResource PersianFontFamilyStyle}" Foreground="{DynamicResource WhiteForeground_ApplicationColors}" MaxWidth="250" Margin="8,4,8,4" Text="{Binding (Validation.Errors)[0].ErrorContent, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>-->
+                <!--<TextBlock Style="{x:Null}" VerticalAlignment="Center" TextWrapping="Wrap" FlowDirection="{DynamicResource RightToLeftStyle}" FontFamily="{DynamicResource PersianFontFamilyStyle}" Foreground="{DynamicResource WhiteForeground_ApplicationColors}" MaxWidth="250" Margin="8,4,8,4" Text="{Binding Validation.ValidationAdornerSite.ValidationErrorsChanged,ConverterParameter=(Validation.Errors),Converter={StaticResource ValidationErrorsToFirstErrorContentConverter},ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"/>-->
+                <TextBlock Style="{x:Null}" VerticalAlignment="Center" TextWrapping="Wrap" FlowDirection="{DynamicResource RightToLeftStyle}" FontFamily="{DynamicResource PersianFontFamilyStyle}" Foreground="White" MaxWidth="250" Margin="8,4,8,4">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource ValidationErrorsToFirstErrorContentConverter}">
+                            <Binding Path="DataContext.ValidationErrorsChanged" ValidatesOnDataErrors="True" NotifyOnValidationError="True" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                            <Binding Path="(Validation.Errors)"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <!--<TextBlock Style="{x:Null}" VerticalAlignment="Center" TextWrapping="Wrap" FlowDirection="{DynamicResource RightToLeftStyle}" FontFamily="{DynamicResource PersianFontFamilyStyle}" Foreground="{DynamicResource WhiteForeground_ApplicationColors}" MaxWidth="250" Margin="8,4,8,4" DataContext="{Binding DataContext}" Text="{Binding}"/>-->
+            </StackPanel>
+        </Border>
+        <ControlTemplate.Triggers>
+            <DataTrigger Value="True">
+                <DataTrigger.Binding>
+                    <MultiBinding Converter="{StaticResource IsValidationWarningConverter}">
+                        <Binding Path="DataContext.ValidationErrorsChanged" ValidatesOnDataErrors="True" NotifyOnValidationError="True" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                        <Binding Path="(Validation.Errors)"/>
+                    </MultiBinding>
+                </DataTrigger.Binding>
+                <Setter TargetName="Root" Property="Background" Value="#ffcb1d"/>
+            </DataTrigger>
+            <DataTrigger Value="False">
+                <DataTrigger.Binding>
+                    <MultiBinding Converter="{StaticResource IsValidationWarningConverter}">
+                        <Binding Path="DataContext.ValidationErrorsChanged" ValidatesOnDataErrors="True" NotifyOnValidationError="True" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                        <Binding Path="(Validation.Errors)"/>
+                    </MultiBinding>
+                </DataTrigger.Binding>
+                <Setter TargetName="Root" Property="Background" Value="#f54f4c"/>
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!--دکمه ای که در درونش آیکن قرار میگیره-->
+    <Style TargetType="Button" x:Key="IconButtonStyle">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="MinWidth" Value="16"/>
+        <Setter Property="MinHeight" Value="16"/>
+        <Setter Property="TextOptions.TextHintingMode" Value="Animated"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="FontFamily" Value="{DynamicResource PersianFontFamilyStyle}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="mainBorder" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#1d1e24" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="White" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="mainBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.5" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid ClipToBounds="True">
+                            <!--<Grid Background="#1d1e24" x:Name="gridDown" Visibility="Collapsed">
+                                <Border BorderBrush="#000000" BorderThickness="2" Margin="-4,0,0,-4">
+                                    <Border.Effect>
+                                        <BlurEffect />
+                                    </Border.Effect>
+                                </Border>
+                            </Grid>-->
+                            <ContentControl x:Name="iconControl" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False" Template="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--دکمه ای که در درونش آیکن قرار میگیره-->
+    <Style TargetType="ToggleButton" x:Key="IconToggleButtonStyle">
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#01ffffff"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="MinWidth" Value="16"/>
+        <Setter Property="MinHeight" Value="16"/>
+        <Setter Property="TextOptions.TextHintingMode" Value="Animated"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="FontFamily" Value="{DynamicResource PersianFontFamilyStyle}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="mainBorder" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#1d1e24" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="Gray" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="mainBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.5" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <!--<Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="selectedBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>-->
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" >
+                                    <!--<Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="selectedBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>-->
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid ClipToBounds="True">
+                            <!--<Grid Background="#1d1e24" x:Name="gridDown" Visibility="Collapsed">
+                                <Border BorderBrush="#000000" BorderThickness="2" Margin="-4,0,0,-4">
+                                    <Border.Effect>
+                                        <BlurEffect />
+                                    </Border.Effect>
+                                </Border>
+                            </Grid>-->
+                            <!--<Border Width="{Binding ElementName=iconControl,Path=ActualWidth}" BorderThickness="1" Opacity="0.5" BorderBrush="Gray" x:Name="selectedBorder" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}">
+                                <Border.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FFC7C7C7" Offset="1"/>
+                                        <GradientStop Color="#FF9E9E9E" Offset="0"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>-->
+                            <ContentControl x:Name="iconControl" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Focusable="False" Template="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--دکمه ای که درونش را خودمان تعیین می کنیم-->
+    <Style TargetType="ToggleButton" x:Key="ContentToggleButtonStyle">
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#01ffffff"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="MinWidth" Value="16"/>
+        <Setter Property="MinHeight" Value="16"/>
+        <Setter Property="TextOptions.TextHintingMode" Value="Animated"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="FontFamily" Value="{DynamicResource PersianFontFamilyStyle}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="mainBorder" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#1d1e24" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="Gray" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="mainBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.5" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <!--<Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="selectedBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>-->
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" >
+                                    <!--<Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="selectedBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>-->
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid ClipToBounds="True">
+                            <!--<Grid Background="#1d1e24" x:Name="gridDown" Visibility="Collapsed">
+                                <Border BorderBrush="#000000" BorderThickness="2" Margin="-4,0,0,-4">
+                                    <Border.Effect>
+                                        <BlurEffect />
+                                    </Border.Effect>
+                                </Border>
+                            </Grid>-->
+                            <!--<Border Width="{Binding ElementName=iconControl,Path=ActualWidth}" BorderThickness="1" Opacity="0.5" BorderBrush="Gray" x:Name="selectedBorder" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}">
+                                <Border.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FFC7C7C7" Offset="1"/>
+                                        <GradientStop Color="#FF9E9E9E" Offset="0"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>-->
+                            <ContentControl x:Name="iconControl" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Focusable="False" Content="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--دکمه ی منو-->
+    <Style TargetType="ToggleButton" x:Key="MenuToggleButtonStyle">
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#01ffffff"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="MinWidth" Value="100"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="TextOptions.TextHintingMode" Value="Animated"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="FontFamily" Value="{DynamicResource PersianFontFamilyTitleStyle}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="mainBorder" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="overBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="overBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="mainBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.5" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="selectedBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" >
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="selectedBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid ClipToBounds="True">
+                            <!--<Grid Background="#1d1e24" x:Name="gridDown" Visibility="Collapsed">
+                                <Border BorderBrush="#000000" BorderThickness="2" Margin="-4,0,0,-4">
+                                    <Border.Effect>
+                                        <BlurEffect />
+                                    </Border.Effect>
+                                </Border>
+                            </Grid>-->
+                            <Border Background="#999999" x:Name="selectedBorder" Visibility="Collapsed" >
+
+                            </Border>
+                            <Border Background="#999999" x:Name="overBorder" Visibility="Collapsed" >
+
+                            </Border>
+                            <ContentPresenter ContentSource="Content"/>
+                            <!--<ContentControl x:Name="iconControl" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False" Template="{TemplateBinding Content}"/>-->
+                        </Grid>
+                    </Border>
+                    <!--<ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="selectedBorder" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter TargetName="selectedBorder" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--استایل دکمه ی گرید نمونه در درج و ویرایش منابع-->
+    <Style TargetType="Button" x:Key="IconGridButtonStyle">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#FF333333"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="MinWidth" Value="16"/>
+        <Setter Property="MinHeight" Value="16"/>
+        <Setter Property="TextOptions.TextHintingMode" Value="Animated"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="FontFamily" Value="{DynamicResource PersianFontFamilyStyle}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="mainBorder" Background="#01ffffff" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="White" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#FF333333" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#FF333333" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="White" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="mainBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.5" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid ClipToBounds="True">
+                            <!--<Grid Background="#1d1e24" x:Name="gridDown" Visibility="Collapsed">
+                                <Border BorderBrush="#000000" BorderThickness="2" Margin="-4,0,0,-4">
+                                    <Border.Effect>
+                                        <BlurEffect />
+                                    </Border.Effect>
+                                </Border>
+                            </Grid>-->
+                            <ContentControl x:Name="iconControl" Margin="{TemplateBinding Padding}" Background="{TemplateBinding Background}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False" Template="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--آپشن دکمه ی سبز رنگ برای انتخاب بین زبان فارسی و انگلیسی -->
+    <Style TargetType="RadioButton" x:Key="GreenRadioButton">
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="65"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="#27ae60"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="FontFamily" Value="{DynamicResource PersianFontFamilyTitleStyle}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="maiBorder" SnapsToDevicePixels="True" CornerRadius="4" Background="#dddddd">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="maiBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0.3" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <!--<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="maiBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="{TemplateBinding Background}" />
+                                        </ColorAnimationUsingKeyFrames>-->
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="checkBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="White" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" >
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="maiBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#dddddd" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#4d4d4d" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid>
+                            <Border x:Name="checkBorder" CornerRadius="4" Background="{TemplateBinding Background}" Visibility="Collapsed">
+                            </Border>
+                            <ContentControl x:Name="contentControl" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" FlowDirection="{TemplateBinding FlowDirection}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False"/>
+                            <Border x:Name="moveBorder" CornerRadius="4" Background="White" Opacity="0.3" Visibility="Collapsed">
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <!--<ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.EnterActions>
+                                <MultiTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.ExitActions>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--آپشن دکمه ی سبز رنگ برای انتخاب روزی های اول هفته -->
+    <Style TargetType="RadioButton" x:Key="SmallGreenRadioButton">
+        <Setter Property="Height" Value="15"/>
+        <Setter Property="Width" Value="45"/>
+        <Setter Property="Padding" Value="0,0,0,0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+
+                    <Border x:Name="maiBorder" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" CornerRadius="4" Background="Transparent">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="maiBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0.3" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="maiBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#27ae60" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="White" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" >
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="maiBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="Transparent" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#4d4d4d" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid>
+                            <TextBlock x:Name="contentControl" Margin="0" Text="{TemplateBinding Content}" FlowDirection="{TemplateBinding FlowDirection}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False"/>
+                            <Border x:Name="moveBorder" CornerRadius="4" Background="Gray" Opacity="0.3" Visibility="Collapsed">
+                            </Border>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--آپشن دکمه ی قرمز رنگ برای انتخاب روزی های تعطیل هفته -->
+    <Style TargetType="RadioButton" x:Key="RedRadioButton">
+        <Setter Property="Height" Value="15"/>
+        <Setter Property="Width" Value="45"/>
+        <Setter Property="Padding" Value="0,0,0,0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="maiBorder" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" CornerRadius="4" Background="Transparent">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="maiBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0.3" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="maiBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#d1404a" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="White" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" >
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="maiBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="Transparent" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#4d4d4d" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid>
+                            <TextBlock x:Name="contentControl" Margin="0" Text="{TemplateBinding Content}" FlowDirection="{TemplateBinding FlowDirection}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False"/>
+                            <Border x:Name="moveBorder" CornerRadius="4" Background="Gray" Opacity="0.3" Visibility="Collapsed">
+                            </Border>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--آپشن دکمه ی سبز رنگ برای انتخاب بین زبان فارسی و انگلیسی -->
+    <Style TargetType="Button" x:Key="ColorButton">
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="65"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily" Value="{DynamicResource PersianFontFamilyTitleStyle}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <!--<Setter Property="Background" Value="#27ae60"/>-->
+        <Setter Property="Background" Value="#3598db"/> 
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="maiBorder" SnapsToDevicePixels="True" CornerRadius="4" Background="{TemplateBinding Background}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <!--<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="maiBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#27ae60" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="White" />
+                                        </ColorAnimationUsingKeyFrames>-->
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="maiBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0.3" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid>
+                            <ContentControl x:Name="contentControl" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" FlowDirection="{TemplateBinding FlowDirection}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False"/>
+                            <Border x:Name="moveBorder" CornerRadius="4" Background="White" Opacity="0.3" Visibility="Collapsed">
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <!--<ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.EnterActions>
+                                <MultiTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.ExitActions>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--آپشن دکمه ی سبز رنگ برای انتخاب بین زبان فارسی و انگلیسی -->
+    <Style TargetType="ToggleButton" x:Key="ColorToggleButton">
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="65"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Background" Value="#27ae60"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="maiBorder" SnapsToDevicePixels="True" CornerRadius="4" Background="{TemplateBinding Background}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="maiBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0.3" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="selectedBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" >
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="selectedBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid>
+                            <ContentControl x:Name="contentControl" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" FlowDirection="{TemplateBinding FlowDirection}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False"/>
+                            <Border x:Name="moveBorder" CornerRadius="4" Background="White" Opacity="0.3" Visibility="Collapsed">
+                            </Border>
+                            <Border x:Name="selectedBorder" CornerRadius="4" Background="White" Opacity="0.3" Visibility="Collapsed">
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <!--<ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.EnterActions>
+                                <MultiTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.ExitActions>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="ToggleButton" x:Key="CheckToggleButton">
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="65"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="maiBorder" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" CornerRadius="4" Background="Transparent">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="maiBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0.3" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="maiBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#d1404a" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="White" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" >
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="maiBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="Transparent" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#4d4d4d" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid>
+                            <TextBlock x:Name="contentControl" Margin="0" Text="{TemplateBinding Content}" FlowDirection="{TemplateBinding FlowDirection}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False"/>
+                            <Border x:Name="moveBorder" CornerRadius="4" Background="Gray" Opacity="0.3" Visibility="Collapsed">
+                            </Border>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--چکباکس درج تسک در تایم لاین -->
+    <Style TargetType="CheckBox" x:Key="timeLineCheckBox">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Grid Background="Transparent">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+
+                                </VisualState>
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="checkControl">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" />
+                                <VisualState x:Name="Indeterminate">
+
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid>
+                            <Border x:Name="Border" Background="#01ffffff">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ContentControl Focusable="False" Grid.Column="1" x:Name="contentControl" Content="{TemplateBinding Content}" FlowDirection="{TemplateBinding FlowDirection}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Border Width="20" Height="20" Margin="0,0,5,0" CornerRadius="5" BorderBrush="#b3b3b3" BorderThickness="1" >
+                                    </Border>
+                                    <ContentControl Visibility="Collapsed" x:Name="checkControl" Foreground="#f2504b" Width="28" Height="28" Margin="0,-12,-10,0" Template="{DynamicResource CheckIcon_TemplateStyle}" Focusable="False"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                    <!--<ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.EnterActions>
+                                <MultiTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="moveBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.ExitActions>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--استایل دکمه ی تولبار نمونه در تایم لاین-->
+    <Style TargetType="Button" x:Key="IconToolbarButtonStyle">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Foreground" Value="#FF333333"/>
+        <Setter Property="Background" Value="#f2f2f2"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="MinWidth" Value="16"/>
+        <Setter Property="MinHeight" Value="16"/>
+        <Setter Property="TextOptions.TextHintingMode" Value="Animated"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="FontFamily" Value="{DynamicResource EnglishFontFamilyStyle}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="mainBorder" Background="#01ffffff" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#FF333333" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#FF7C7C7C" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#898989" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="iconControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#898989" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="mainBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.5" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid ClipToBounds="True">
+                            <!--<Grid Background="#1d1e24" x:Name="gridDown" Visibility="Collapsed">
+                                <Border BorderBrush="#000000" BorderThickness="2" Margin="-4,0,0,-4">
+                                    <Border.Effect>
+                                        <BlurEffect />
+                                    </Border.Effect>
+                                </Border>
+                            </Grid>-->
+                            <ContentControl x:Name="iconControl" Margin="{TemplateBinding Padding}" Background="{TemplateBinding Background}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False" Template="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--استایل یک آیتم از منو-->
+    <!--<Style TargetType="MenuItem">
+        <Setter Property="MinHeight" Value="30"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type MenuItem}">
+                    <Border x:Name="Border" BorderThickness="0,0,0,1" BorderBrush="#eeeeee" Background="#01ffffff">
+                        <Grid Margin="10,0,10,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Shortcut" />
+                                <ColumnDefinition Width="13" />
+                            </Grid.ColumnDefinitions>
+                            <ContentPresenter x:Name="Icon" Margin="6,0,6,0" VerticalAlignment="Center" ContentSource="Icon" />
+                            <Border x:Name="Check" Width="13" Height="13" Visibility="Collapsed" Margin="6,0,6,0" BorderThickness="1">
+                                <Path x:Name="CheckMark" Stroke="Green" Width="7" Height="7" Visibility="Hidden" SnapsToDevicePixels="False" StrokeThickness="2" Data="M 0 0 L 7 7 M 0 7 L 7 0">
+
+                                </Path>
+                            </Border>
+                            <ContentPresenter  VerticalAlignment="Center" x:Name="HeaderHost" Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True" />
+                            <TextBlock x:Name="InputGestureText" Grid.Column="2" Text="{TemplateBinding InputGestureText}" Margin="5,2,0,2" DockPanel.Dock="Right" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Icon" Value="{x:Null}">
+                            <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsCheckable" Value="true">
+                            <Setter TargetName="Check" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsHighlighted" Value="true">
+                            <Setter Property="Background" TargetName="Border" Value="#eeeeee"/>-->
+                            <!--<Setter Property="BorderBrush" TargetName="Border">
+                                        <Setter.Value>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="{DynamicResource BorderMediumColor}" Offset="0" />
+                                                <GradientStop Color="Transparent" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>-->
+                        <!--</Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="#FF888888"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>-->
+    <!--استایل منوی راست کلیک-->
+
+    <!--<Style TargetType="{x:Type ContextMenu}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Grid.IsSharedSizeScope" Value="true" />
+        <Setter Property="HasDropShadow" Value="True" />
+        <Setter Property="MinWidth" Value="150"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border x:Name="Border" Background="White" BorderThickness="1" BorderBrush="#bbbbbb">
+                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasDropShadow" Value="true">
+                            <Setter TargetName="Border" Property="Padding" Value="0,0,0,0" />
+                            <Setter TargetName="Border" Property="CornerRadius" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>-->
+    <!--حذف انیمیشن منو-->
+    <!--<PopupAnimation x:Key="{x:Static SystemParameters.MenuPopupAnimationKey}">None</PopupAnimation>-->
+    <!--استایل دکمه ی مشغول-->
+
+    <Style x:Key="busyButton" TargetType="Button">
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Width" Value="100"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Foreground" Value="#6a6a6a"/>
+        <Setter Property="FontSize" Value="{DynamicResource NormalFontSizeStyle}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="maiBorder" SnapsToDevicePixels="True" Background="#01ffffff">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="bordermove">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="moveBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#d4d4d4" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="moveBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#e5e5e5" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="contentControl">
+                                            <EasingThicknessKeyFrame KeyTime="0" Value="1,1,-1,-1"/>
+                                        </ThicknessAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="contentControl">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0.3" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="disableElement">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="border1">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="border2">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border x:Name="moveBorder" BorderThickness="1" BorderBrush="#bcbcbc" CornerRadius="3">
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#e5e5e5" Offset="0"/>
+                                    <GradientStop Color="#d4d4d4" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border x:Name="bordermove" BorderThickness="1" BorderBrush="White" Opacity="0.5" CornerRadius="3">
+
+                            </Border>
+                        </Border>
+                        <Grid  Margin="{TemplateBinding Padding}">
+                            <ContentControl x:Name="contentControl" Content="{TemplateBinding Content}" FlowDirection="{TemplateBinding FlowDirection}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="uc:PopupAutoLocation" x:Key="PopupAutoLocationStyle">
+        <Setter Property="Placement" Value="{Binding Path=PlacementTarget.(helper:ValidationCheckRuleHelper.PlacementMode),RelativeSource={RelativeSource Self}}"/>
+        <!--<Setter Property="FlowDirection" Value="{Binding Path=PlacementTarget.(helper:ValidationCheckRuleHelper.FlowDirection),RelativeSource={RelativeSource Self}}"/>-->
+        <Setter Property="HorizontalOffset" Value="{Binding Path=PlacementTarget.(helper:ValidationCheckRuleHelper.HorizontalOffset),RelativeSource={RelativeSource Self}}"/>
+        <Setter Property="VerticalOffset" Value="{Binding Path=PlacementTarget.(helper:ValidationCheckRuleHelper.VerticalOffset),RelativeSource={RelativeSource Self}}"/>
+        <Setter Property="PlacementTarget" Value="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+        <Setter Property="DataContext" Value="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <!--<Setter Property="Child">
+            <Setter.Value>
+               
+            </Setter.Value>
+        </Setter>-->
+    </Style>
+    <!--استایل کادر متن-->
+    <Style TargetType="TextBox">
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Margin" Value="0,7,0,0"/>
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Disabled">
+
+                                </VisualState>
+                                <VisualState x:Name="ReadOnly">
+
+                                </VisualState>
+                                <VisualState x:Name="MouseOver" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Valid"/>
+                                <VisualState x:Name="InvalidUnfocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ValidationErrorElement" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="InvalidFocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ValidationErrorElement" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetName="validationTooltip" Storyboard.TargetProperty="IsOpen">
+                                            <DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border Name="Border" CornerRadius="2" BorderBrush="#b3b3b3" BorderThickness="1">
+                        </Border>
+                        <Border x:Name="ValidationErrorElement" CornerRadius="2" BorderThickness="1" BorderBrush="#f54f4c" Visibility="Collapsed">
+                            
+                        </Border>
+                        <uc:PopupAutoLocation FlowDirection="{DynamicResource RightToLeftStyle}" x:Name="validationTooltip" Style="{StaticResource PopupAutoLocationStyle}">
+                            <Control x:Name="validC" Template="{StaticResource ValidationToolTipTemplate}"  FlowDirection="{Binding RelativeSource={RelativeSource Self},Path=DataContext.FlowDirection}">
+
+                            </Control>
+                        </uc:PopupAutoLocation>
+                        <ScrollViewer Margin="2" x:Name="PART_ContentHost" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Value="True">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource IsValidationWarningConverter}">
+                                    <Binding ElementName="validC" Path="DataContext.DataContext.ValidationErrorsChanged" ValidatesOnDataErrors="True" NotifyOnValidationError="True" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                    <Binding ElementName="validC" Path="(DataContext).(Validation.Errors)"/>
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter TargetName="ValidationErrorElement" Property="BorderBrush" Value="#ffcb1d"/>
+                        </DataTrigger>
+                        <DataTrigger Value="False">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource IsValidationWarningConverter}">
+                                    <Binding ElementName="validC" Path="DataContext.DataContext.ValidationErrorsChanged" ValidatesOnDataErrors="True" NotifyOnValidationError="True" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                    <Binding ElementName="validC" Path="(DataContext).(Validation.Errors)"/>
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter TargetName="ValidationErrorElement" Property="BorderBrush" Value="#f54f4c"/>
+                        </DataTrigger>
+                        <!--<DataTrigger Binding="{Binding (Validation.Errors),Converter={StaticResource IsValidationWarningConverter}, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                            <Setter TargetName="ValidationErrorElement" Property="BorderBrush" Value="#ffcb1d"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding (Validation.Errors),Converter={StaticResource IsValidationWarningConverter}, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                            <Setter TargetName="ValidationErrorElement" Property="BorderBrush" Value="#f54f4c"/>
+                        </DataTrigger>-->
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--استایل کادر متن-->
+    <Style TargetType="PasswordBox">
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Margin" Value="0,7,0,0"/>
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type PasswordBox}">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Disabled">
+
+                                </VisualState>
+                                <VisualState x:Name="ReadOnly">
+
+                                </VisualState>
+                                <VisualState x:Name="MouseOver" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Valid"/>
+                                <VisualState x:Name="InvalidUnfocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ValidationErrorElement" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="InvalidFocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ValidationErrorElement" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetName="validationTooltip" Storyboard.TargetProperty="IsOpen">
+                                            <DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border Name="Border" CornerRadius="5" BorderBrush="#b3b3b3" BorderThickness="1">
+                        </Border>
+                        <Border x:Name="ValidationErrorElement" CornerRadius="5" BorderThickness="1" BorderBrush="#f54f4c" Visibility="Collapsed">
+
+                        </Border>
+                        <uc:PopupAutoLocation FlowDirection="{DynamicResource RightToLeftStyle}" x:Name="validationTooltip" Style="{StaticResource PopupAutoLocationStyle}">
+                            <Control x:Name="validC" Template="{StaticResource ValidationToolTipTemplate}">
+
+                            </Control>
+                        </uc:PopupAutoLocation>
+                        <ScrollViewer Margin="2" x:Name="PART_ContentHost" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Value="True">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource IsValidationWarningConverter}">
+                                    <Binding ElementName="validC" Path="DataContext.DataContext.ValidationErrorsChanged" ValidatesOnDataErrors="True" NotifyOnValidationError="True" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                    <Binding ElementName="validC" Path="(DataContext).(Validation.Errors)"/>
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter TargetName="ValidationErrorElement" Property="BorderBrush" Value="#ffcb1d"/>
+                        </DataTrigger>
+                        <DataTrigger Value="False">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource IsValidationWarningConverter}">
+                                    <Binding ElementName="validC" Path="DataContext.DataContext.ValidationErrorsChanged" ValidatesOnDataErrors="True" NotifyOnValidationError="True" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                    <Binding ElementName="validC" Path="(DataContext).(Validation.Errors)"/>
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter TargetName="ValidationErrorElement" Property="BorderBrush" Value="#f54f4c"/>
+                        </DataTrigger>
+                        <!--<DataTrigger Binding="{Binding (Validation.Errors),Converter={StaticResource IsValidationWarningConverter}, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                            <Setter TargetName="ValidationErrorElement" Property="BorderBrush" Value="#ffcb1d"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding (Validation.Errors),Converter={StaticResource IsValidationWarningConverter}, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                            <Setter TargetName="ValidationErrorElement" Property="BorderBrush" Value="#f54f4c"/>
+                        </DataTrigger>-->
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+        <Grid Background="#01ffffff">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="MouseOver">
+                        <Storyboard>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Pressed" />
+                    <VisualState x:Name="Disabled">
+                        <Storyboard>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="CheckStates">
+                    <VisualState x:Name="Checked">
+                        <Storyboard>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Unchecked" />
+                    <VisualState x:Name="Indeterminate" />
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            
+            <ContentPresenter Content="{TemplateBinding Content}"/>
+
+            <ContentControl  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False">
+                <ContentControl.Template>
+                    <ControlTemplate>
+                        <Viewbox>
+                            <Grid Width="48" Height="48" Visibility="Visible">
+                                <Path Data="M1.7080078,0L16,18.376017 30.291992,0 32,1.3290391 16,21.9 0,1.3290391z" Stretch="Uniform" Fill="Black" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <TransformGroup.Children>
+                                                <RotateTransform Angle="0" />
+                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                            </TransformGroup.Children>
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Grid>
+                        </Viewbox>
+                    </ControlTemplate>
+                </ContentControl.Template>
+            </ContentControl>
+        </Grid>
+    </ControlTemplate>
+    
+    <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="MinHeight" Value="20" />
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Margin" Value="0,7,0,0"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="IsEditable" Value="False"/>
+        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver" />
+                                <VisualState x:Name="Disabled">
+
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="EditStates">
+                                <VisualState x:Name="Editable">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PART_EditableTextBox">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ContentSite">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Uneditable" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Valid"/>
+                                <VisualState x:Name="InvalidUnfocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ValidationErrorElement" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="InvalidFocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ValidationErrorElement" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetName="validationTooltip" Storyboard.TargetProperty="IsOpen">
+                                            <DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        
+                        <ToggleButton x:Name="ToggleButton" Template="{StaticResource ComboBoxToggleButton}" Grid.Column="2" Focusable="false" ClickMode="Press" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        <Border x:Name="Border" CornerRadius="5" Padding="2" BorderBrush="#b3b3b3" BorderThickness="1">
+                        </Border>
+                        <Border x:Name="ValidationErrorElement" CornerRadius="5" BorderThickness="1" BorderBrush="#f54f4c" Visibility="Collapsed">
+
+                        </Border>
+                        <uc:PopupAutoLocation FlowDirection="{DynamicResource RightToLeftStyle}" x:Name="validationTooltip" Style="{StaticResource PopupAutoLocationStyle}">
+                            <Control x:Name="validC" Template="{StaticResource ValidationToolTipTemplate}">
+
+                            </Control>
+                        </uc:PopupAutoLocation>
+                        <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="5,3,23,3" VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                        </ContentPresenter>
+                        <!--<TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" Template="{StaticResource ComboBoxTextBox}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3,3,23,3" Focusable="True" Background="Transparent" Visibility="Collapsed" IsReadOnly="{TemplateBinding IsReadOnly}" />-->
+                        <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="None">
+                            <Grid x:Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Border x:Name="DropDownBorder" Background="White" BorderThickness="1" BorderBrush="#b3b3b3">
+
+                                </Border>
+                                <ScrollViewer Margin="0" SnapsToDevicePixels="True">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="false">
+                            <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+                        </Trigger>
+                        <Trigger Property="IsGrouping" Value="true">
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                        </Trigger>
+                        <DataTrigger Value="True">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource IsValidationWarningConverter}">
+                                    <Binding ElementName="validC" Path="DataContext.DataContext.ValidationErrorsChanged" ValidatesOnDataErrors="True" NotifyOnValidationError="True" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                    <Binding ElementName="validC" Path="(DataContext).(Validation.Errors)"/>
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter TargetName="ValidationErrorElement" Property="BorderBrush" Value="#ffcb1d"/>
+                        </DataTrigger>
+                        <DataTrigger Value="False">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource IsValidationWarningConverter}">
+                                    <Binding ElementName="validC" Path="DataContext.DataContext.ValidationErrorsChanged" ValidatesOnDataErrors="True" NotifyOnValidationError="True" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                    <Binding ElementName="validC" Path="(DataContext).(Validation.Errors)"/>
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter TargetName="ValidationErrorElement" Property="BorderBrush" Value="#f54f4c"/>
+                        </DataTrigger>
+                        <!--<Trigger Property="IsEditable" Value="false">
+                                    <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                                <Trigger Property="IsEditable" Value="true">
+                                    <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
+                                </Trigger>-->
+                        <Trigger SourceName="Popup" Property="AllowsTransparency" Value="true">
+                            <!--<Setter TargetName="DropDownBorder" Property="CornerRadius" Value="4" />-->
+                            <Setter TargetName="DropDownBorder" Property="Margin" Value="0,0,0,0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Border x:Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
+                        <!--<VisualStateManager.VisualStateGroups>
+ <VisualStateGroup x:Name="SelectionStates">
+ <VisualState x:Name="Unselected" />
+ <VisualState x:Name="Selected">
+ <Storyboard>
+ <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background). (SolidColorBrush.Color)">
+ <EasingColorKeyFrame KeyTime="0" Value="{StaticResource SelectedBackgroundColor}" />
+ </ColorAnimationUsingKeyFrames>
+ </Storyboard>
+ </VisualState>
+ <VisualState x:Name="SelectedUnfocused">
+ <Storyboard>
+ <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background). (SolidColorBrush.Color)">
+ <EasingColorKeyFrame KeyTime="0" Value="{StaticResource SelectedUnfocusedColor}" />
+ </ColorAnimationUsingKeyFrames>
+ </Storyboard>
+ </VisualState>
+ </VisualStateGroup>
+ </VisualStateManager.VisualStateGroups>-->
+                        <ContentPresenter Margin="5,0,5,0"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="true">
+                            <Setter Property="Background" TargetName="Border" Value="#4d4d4d"/>
+                            <Setter Property="Foreground" Value="white"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ScrollBarLineButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border x:Name="Border" Background="#f1f1f1" Margin="1" BorderThickness="0">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver" />
+                                <VisualState x:Name="Pressed">
+                                    
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Arrow" Storyboard.TargetProperty="Opacity">
+                                            <EasingDoubleKeyFrame KeyTime="0"
+                                         Value="0.5" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Path Fill="#4d4d4d" x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" >
+                           
+                        </Path>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Border x:Name="ScrollBarThumbBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" helper:SizeObserver.Observe="True" helper:SizeObserver.ObservedWidth="{Binding ScrollThumbActualWidth,Mode=OneWayToSource}" BorderThickness="1" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="18" />
+                <RowDefinition Height="0.00001*" />
+                <RowDefinition MaxHeight="18" />
+            </Grid.RowDefinitions>
+            <Border Grid.RowSpan="3" Background="#F0F0F0" />
+            <RepeatButton Grid.Row="0" Style="{StaticResource ScrollBarLineButton}" Height="18" Command="ScrollBar.LineUpCommand" Content="M 0 4 L 8 4 L 4 0 Z" />
+            <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageUpCommand" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource ScrollBarThumb}" Background="#bebebe" BorderBrush="#a8a8a8" Margin="1,0,1,0">
+                        
+                    </Thumb>
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageDownCommand" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <RepeatButton Grid.Row="3" Style="{StaticResource ScrollBarLineButton}" Height="18" Command="ScrollBar.LineDownCommand" Content="M 0 0 L 4 4 L 8 0 Z" />
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="HorizontalScrollBar" TargetType="{x:Type ScrollBar}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="18" />
+                <ColumnDefinition Width="0.00001*" />
+                <ColumnDefinition MaxWidth="18" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.ColumnSpan="3" Background="#F0F0F0" />
+            <RepeatButton Grid.Column="0" Style="{StaticResource ScrollBarLineButton}" Width="18" Command="ScrollBar.LineLeftCommand" Content="M 4 0 L 4 8 L 0 4 Z" />
+            <Track x:Name="PART_Track" Grid.Column="1" IsDirectionReversed="False">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageLeftCommand" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource ScrollBarThumb}"  Background="#bebebe" BorderBrush="#a8a8a8" Margin="0,1,0,1">
+                       
+                    </Thumb>
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageRightCommand" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <RepeatButton Grid.Column="3" Style="{StaticResource ScrollBarLineButton}" Width="18" Command="ScrollBar.LineRightCommand" Content="M 0 0 L 4 4 L 0 8 Z" />
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="Height" Value="18" />
+                <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
+            </Trigger>
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="Width" Value="18" />
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="SliderButtonStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SliderThumbStyle" TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Height" Value="14" />
+        <Setter Property="Width" Value="14" />
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Ellipse x:Name="Ellipse" Fill="#2196f3">
+                    </Ellipse>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Template when the orientation of the Slider is Horizontal.-->
+    <ControlTemplate x:Key="HorizontalSlider" TargetType="{x:Type Slider}">
+        <Grid ClipToBounds="False">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TickBar x:Name="TopTick" Fill="Blue" SnapsToDevicePixels="True" Placement="Top" Height="4" Visibility="Collapsed">
+
+            </TickBar>
+            <Border x:Name="TrackBackground" Background="#999999" Margin="0" Height="4" Grid.Row="1" BorderThickness="1">
+
+            </Border>
+            <Canvas  Grid.Row="1">
+                <StackPanel Grid.Row="1" Orientation="Horizontal" ClipToBounds="False">
+                    <Grid Margin="0,0,0,0" Width="{Binding ElementName=PART_Track,Path=DecreaseRepeatButton.ActualWidth}">
+
+                    </Grid>
+                    <StackPanel Margin="-13,-17,0,0">
+                        <Border Grid.Row="1" Background="#2196f3" CornerRadius="5" Width="40" Height="15">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock FontFamily="{DynamicResource EnglishFontFamilyStyle}" FontSize="8" Foreground="White" Text="%"/>
+                                <TextBlock FontSize="7" Foreground="White" Text=" "/>
+                                <TextBlock FontFamily="{DynamicResource EnglishFontFamilyStyle}" FontSize="8" Foreground="White" Text="{Binding Value,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Slider}}"/>
+                            </StackPanel>
+                        </Border>
+                        <ContentControl Width="5" Height="5" Foreground="#2196f3" Template="{DynamicResource DownArrow_TemplateStyle}"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Canvas>
+
+
+            <Track Grid.Row="1" x:Name="PART_Track">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource SliderThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <TickBar x:Name="BottomTick" SnapsToDevicePixels="True" Grid.Row="2" Fill="{TemplateBinding Foreground}" Placement="Bottom" Height="4" Visibility="Collapsed" />
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="TickPlacement" Value="TopLeft">
+                <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="TickPlacement" Value="BottomRight">
+                <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="TickPlacement" Value="Both">
+                <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!--Template when the orientation of the Slider is Vertical.-->
+    <ControlTemplate x:Key="VerticalSlider" TargetType="{x:Type Slider}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" MinWidth="{TemplateBinding MinWidth}" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TickBar x:Name="TopTick" Fill="Red" SnapsToDevicePixels="True" Placement="Left" Width="4" Visibility="Collapsed">
+            </TickBar>
+
+            <Border x:Name="TrackBackground" Background="Gray" Margin="0" CornerRadius="2" Width="4" Grid.Column="1" BorderThickness="1">
+            </Border>
+            <Track Grid.Column="1" x:Name="PART_Track">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource SliderThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <TickBar x:Name="BottomTick" SnapsToDevicePixels="True" Grid.Column="2" Fill="{TemplateBinding Foreground}" Placement="Right" Width="4" Visibility="Collapsed" />
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="TickPlacement" Value="TopLeft">
+                <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="TickPlacement" Value="BottomRight">
+                <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="TickPlacement" Value="Both">
+                <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <!--استایل اسلایدر-->
+    <Style TargetType="{x:Type Slider}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="MinWidth" Value="104" />
+                <Setter Property="MinHeight" Value="21" />
+                <Setter Property="Template" Value="{StaticResource HorizontalSlider}" />
+            </Trigger>
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="MinWidth" Value="21" />
+                <Setter Property="MinHeight" Value="104" />
+                <Setter Property="Template" Value="{StaticResource VerticalSlider}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <!--استایل کنترل قفل کردن-->
+    <Style TargetType="ToggleButton" x:Key="LockToggleButton">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="Border" Margin="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <!--<Storyboard>
+                                                <ColorAnimation Duration="0" Storyboard.TargetName="lockControl" To="Black" Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)"/>
+                                                <ColorAnimation Duration="0" Storyboard.TargetName="unLockControl" To="Black" Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)"/>
+                                            </Storyboard>-->
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="unLockControl">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Hidden}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="lockControl">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" >
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="unLockControl">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="lockControl">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Hidden}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid>
+                            <Control x:Name="lockControl" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" Template="{DynamicResource Lock_TemplateStyle}" Background="#FFD32929"/>
+                            <Control x:Name="unLockControl" HorizontalAlignment="Center" VerticalAlignment="Center" Template="{DynamicResource UnLock_TemplateStyle}" Background="#FF0C970C"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--استایل کنترل دارای آیکن-->
+    <Style TargetType="ToggleButton" x:Key="IconToggleButton">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Background" Value="#f2f2f2"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="Border" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Border">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.5" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" >
+
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid>
+                            <Control Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}" x:Name="contentControl" HorizontalAlignment="Center" VerticalAlignment="Center" Template="{TemplateBinding Content}"/>
+                            <!--<Control Foreground="{TemplateBinding Foreground}" x:Name="lockControl" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" Template="{DynamicResource Lock_TemplateStyle}"/>
+                                    <Control Foreground="{TemplateBinding Foreground}" x:Name="unLockControl" HorizontalAlignment="Center" VerticalAlignment="Center" Template="{DynamicResource UnLock_TemplateStyle}"/>-->
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#FF333333" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#f2f2f2" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#f2f2f2" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#FF333333" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Name="beginStory">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#FF333333" />
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                            <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#f2f2f2" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <!--<BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                                    <EasingColorKeyFrame KeyTime="0:0:0.3" Value="#01ffffff"/>
+                                                </ColorAnimationUsingKeyFrames>
+                                                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="contentControl">
+                                                    <EasingColorKeyFrame KeyTime="0:0:0.05" Value="#444444" />
+                                                </ColorAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>-->
+                                <StopStoryboard BeginStoryboardName="beginStory"/>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <!--<Trigger Property="IsPressed" Value="true">
+                                    <Setter TargetName="Border" Property="Background" Value="Green" />
+                                    <Setter TargetName="Border" Property="BorderBrush" Value="Green" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter TargetName="Border" Property="Opacity" Value="0.25" />
+                                </Trigger>-->
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,71 @@
+﻿<Window x:Class="NoorpodConversation.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NoorpodConversation.UI"
+        xmlns:vm="clr-namespace:NoorpodConversation.ViewModels.Views;assembly=NoorpodConversation.ViewModels"
+        mc:Ignorable="d"
+        xmlns:ctrl="clr-namespace:NoorpodConversation.UI.Views" Icon="noorIcon.ico"
+        Title="نرم افزار پیام رسان به سوی نور" MinHeight="350" MinWidth="525" SnapsToDevicePixels="True" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,0,10,0"/>
+            <Setter Property="Height" Value="23"/>
+        </Style>
+        <vm:MainWindowViewModel x:Key="MainWindowViewModel"/>
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Source="{StaticResource MainWindowViewModel}"/>
+    </Window.DataContext>
+    <Grid FlowDirection="RightToLeft" Margin="10">
+        <ctrl:LoginPage>
+            <ctrl:LoginPage.Style>
+                <Style TargetType="ctrl:LoginPage">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoginPage,Source={StaticResource MainWindowViewModel}}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ctrl:LoginPage.Style>
+        </ctrl:LoginPage>
+        <ctrl:MessengerPage>
+            <ctrl:MessengerPage.Style>
+                <Style TargetType="ctrl:MessengerPage">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChatPage,Source={StaticResource MainWindowViewModel}}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ctrl:MessengerPage.Style>
+        </ctrl:MessengerPage>
+        <Grid Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="میکروفن سیستم:"/>
+                <ComboBox x:Name="micCombo" DisplayMemberPath="ProductName" Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Left" Width="200"/>
+                <Button x:Name="btnRefreshMic" Click="btnRefreshMic_Click" Content="بارگزاری مجدد" Grid.Column="2" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+            </Grid>
+            <StackPanel Grid.Row="1" Margin="0,10,0,0">
+                <Button x:Name="btnConnnect" Click="btnConnnect_Click" Content="برقراری اتصال" HorizontalAlignment="Left"/>
+                <Button x:Name="btnRecourd" Click="btnRecourd_Click" Content="صحبت کردن" HorizontalAlignment="Left"/>
+                <Button x:Name="btnPlay" Click="btnPlay_Click" Content="پخش" HorizontalAlignment="Left"/>
+                <CheckBox x:Name="btnplayMic" Checked="btnplayMic_Click" Unchecked="btnplayMic_Click" Margin="0,10,0,0" Content="فرستادن صدا" HorizontalAlignment="Left"/>
+                <ProgressBar x:Name="micProgress" Height="20" Maximum="1"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

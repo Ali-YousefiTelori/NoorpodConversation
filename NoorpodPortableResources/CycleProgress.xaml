@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="NoorpodPortableResources.CycleProgress"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NoorpodPortableResources"
+             mc:Ignorable="d" 
+             d:DesignHeight="120" d:DesignWidth="120" x:Name="userControl" FontFamily="{DynamicResource PersianFontFamilyStyle}">
+    <!--پروگرسبار گرد-->
+    <UserControl.Resources>
+        <local:ProgressToAngleConverter x:Key="ProgressConverter"/>
+        <Style TargetType="{x:Type ProgressBar}" x:Key="ProgressBarStyle">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ProgressBar}">
+                        <Viewbox>
+                            <Grid Width="100" Height="100" SnapsToDevicePixels="True">
+                                <Ellipse Margin="5" Fill="{TemplateBinding Background}"/>
+                                <local:Arc StrokeThickness="8" Stroke="{TemplateBinding Foreground}" >
+                                    <local:Arc.StartAngle>
+                                        <MultiBinding Converter="{StaticResource ProgressConverter}">
+                                            <Binding Path="Minimum" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                            <Binding Path="." RelativeSource="{RelativeSource TemplatedParent}"/>
+                                        </MultiBinding>
+                                    </local:Arc.StartAngle>
+                                    <local:Arc.EndAngle>
+                                        <MultiBinding Converter="{StaticResource ProgressConverter}">
+                                            <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                            <Binding Path="." RelativeSource="{RelativeSource TemplatedParent}"/>
+                                        </MultiBinding>
+                                    </local:Arc.EndAngle>
+                                </local:Arc>
+                                <Viewbox>
+                                    <StackPanel Orientation="Horizontal" Margin="{TemplateBinding Padding}">
+                                        <TextBlock FontSize="8" FontFamily="{DynamicResource PersianFontFamilyTitleStyle}" VerticalAlignment="Center" Text="%" Foreground="Black"/>
+                                        <TextBlock VerticalAlignment="Center" FontFamily="{DynamicResource PersianFontFamilyTitleStyle}" Text="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, StringFormat=\{0:0\}}" FlowDirection="RightToLeft" Foreground="Black"/>
+                                    </StackPanel>
+                                </Viewbox>
+                            </Grid>
+                        </Viewbox>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <!--<Viewbox x:Name="mainView" Width="{Binding ElementName=mainView,Path=ActualWidth}" Height="{Binding ElementName=mainView,Path=ActualHeight}">-->
+        <ProgressBar x:Name="mainProgress" Padding="{Binding ElementName=userControl,Path=PrecentagePadding}" Style="{StaticResource ProgressBarStyle}" Maximum="100" Value="{Binding ElementName=userControl,Path=Value,Mode=TwoWay}" Foreground="{Binding Foreground,ElementName=userControl}" Background="{Binding ElementName=userControl,Path=ProgressBackground}"/>
+        <!--</Viewbox>-->
+    </Grid>
+</UserControl>

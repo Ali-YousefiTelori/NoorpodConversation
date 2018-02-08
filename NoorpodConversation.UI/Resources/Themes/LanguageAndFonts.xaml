@@ -1,0 +1,107 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <FlowDirection x:Key="RightToLeftStyle">RightToLeft</FlowDirection>
+    <!--<FontFamily x:Key="PersianFontFamilyStyle">pack://application:,,,/NoorpodPortableResources;Component/Resources/Fonts/#IRANSans Light</FontFamily>
+    <FontFamily x:Key="PersianFontFamilyTitleStyle">pack://application:,,,/NoorpodPortableResources;Component/Resources/Fonts/#B Bardiya</FontFamily>-->
+    
+    <!--<FontFamily x:Key="PersianFontFamilyStyle">pack://application:,,,/NoorpodPortableResources;Component/Resources/Fonts/#B Roya</FontFamily>-->
+
+    <FontFamily x:Key="EnglishFontFamilyStyle">Calibri</FontFamily>
+    <sys:Double x:Key="NormalFontSizeStyle">14</sys:Double>
+
+    <!--Persian Languages-->
+
+    <sys:String x:Key="1Month_Persian">فروردین</sys:String>
+    <sys:String x:Key="2Month_Persian">اردیبهشت</sys:String>
+    <sys:String x:Key="3Month_Persian">خرداد</sys:String>
+    <sys:String x:Key="4Month_Persian">تیر</sys:String>
+    <sys:String x:Key="5Month_Persian">مرداد</sys:String>
+    <sys:String x:Key="6Month_Persian">شهریور</sys:String>
+    <sys:String x:Key="7Month_Persian">مهر</sys:String>
+    <sys:String x:Key="8Month_Persian">آبان</sys:String>
+    <sys:String x:Key="9Month_Persian">آذر</sys:String>
+    <sys:String x:Key="10Month_Persian">دی</sys:String>
+    <sys:String x:Key="11Month_Persian">بهمن</sys:String>
+    <sys:String x:Key="12Month_Persian">اسفند</sys:String>
+
+    <sys:String x:Key="Saturday_Persian">شنــــبه</sys:String>
+    <sys:String x:Key="Sunday_Persian">یکشنـبه</sys:String>
+    <sys:String x:Key="Monday_Persian">دوشنــبه</sys:String>
+    <sys:String x:Key="Tuesday_Persian">سه شنبه</sys:String>
+    <sys:String x:Key="Wednesday_Persian">چهارشنبه</sys:String>
+    <sys:String x:Key="Thursday_Persian">پنجشنبه</sys:String>
+    <sys:String x:Key="Friday_Persian">جمـــعه</sys:String>
+    
+    <sys:String x:Key="SaturdayS_Persian">شنبه</sys:String>
+    <sys:String x:Key="SundayS_Persian">یکشنبه</sys:String>
+    <sys:String x:Key="MondayS_Persian">دوشنبه</sys:String>
+    <sys:String x:Key="TuesdayS_Persian">سه شنبه</sys:String>
+    <sys:String x:Key="WednesdayS_Persian">چهارشنبه</sys:String>
+    <sys:String x:Key="ThursdayS_Persian">پنجشنبه</sys:String>
+    <sys:String x:Key="FridayS_Persian">جمعه</sys:String>
+    <!--English Languages-->
+
+    <!--<sys:String x:Key="1Month_English">January</sys:String>
+    <sys:String x:Key="2Month_English">February</sys:String>
+    <sys:String x:Key="3Month_English">March</sys:String>
+    <sys:String x:Key="4Month_English">April</sys:String>
+    <sys:String x:Key="5Month_English">May</sys:String>
+    <sys:String x:Key="6Month_English">June</sys:String>
+    <sys:String x:Key="7Month_English">July</sys:String>
+    <sys:String x:Key="8Month_English">August</sys:String>
+    <sys:String x:Key="9Month_English">September</sys:String>
+    <sys:String x:Key="10Month_English">October</sys:String>
+    <sys:String x:Key="11Month_English">November</sys:String>
+    <sys:String x:Key="12Month_English">December</sys:String>-->
+    <sys:String x:Key="1Month_English">Jan</sys:String>
+    <sys:String x:Key="2Month_English">Feb</sys:String>
+    <sys:String x:Key="3Month_English">Mar</sys:String>
+    <sys:String x:Key="4Month_English">Apr</sys:String>
+    <sys:String x:Key="5Month_English">May</sys:String>
+    <sys:String x:Key="6Month_English">Jun</sys:String>
+    <sys:String x:Key="7Month_English">Jul</sys:String>
+    <sys:String x:Key="8Month_English">Aug</sys:String>
+    <sys:String x:Key="9Month_English">Sept</sys:String>
+    <sys:String x:Key="10Month_English">Oct</sys:String>
+    <sys:String x:Key="11Month_English">Nov</sys:String>
+    <sys:String x:Key="12Month_English">Dec</sys:String>
+
+    <sys:String x:Key="Saturday_English">Sat</sys:String>
+    <sys:String x:Key="Sunday_English">Sun</sys:String>
+    <sys:String x:Key="Monday_English">Mon</sys:String>
+    <sys:String x:Key="Tuesday_English">Tue</sys:String>
+    <sys:String x:Key="Wednesday_English">Wed</sys:String>
+    <sys:String x:Key="Thursday_English">Thu</sys:String>
+    <sys:String x:Key="Friday_English">Fri</sys:String>
+
+
+    <sys:String x:Key="Yes_Language">بلی</sys:String>
+    <sys:String x:Key="No_Language">خیر</sys:String>
+
+    <sys:String x:Key="Unknown_Language">نامشخص</sys:String>
+
+    <sys:String x:Key="Secound_Language">ثانیه</sys:String>
+    <sys:String x:Key="Minute_Language">دقیقه</sys:String>
+    <sys:String x:Key="Day_Language">روز</sys:String>
+
+    <sys:String x:Key="MinValidation_Language">عدد وارد شده باید کوچکتر از</sys:String>
+    <sys:String x:Key="IsValidation_Language">باشد.</sys:String>
+    <sys:String x:Key="IsRaghamValidation_Language">رقم باشد.</sys:String>
+    <sys:String x:Key="IsMaxValidation_Language">عدد وارد شده خیلی بزرگ است.</sys:String>
+    <sys:String x:Key="MaxValidation_Language">عدد وارد شده باید بزرگتر از</sys:String>
+    <sys:String x:Key="PleaseSetTrue_Language">لطفاً عدد را صحیح وارد کنید</sys:String>
+    <sys:String x:Key="MaxCharValidation_Language">تعداد کاراکتر های این کادر باید بیشتر از</sys:String>
+    <sys:String x:Key="MinCharValidation_Language">تعداد کاراکتر های این کادر باید کمتر از</sys:String>
+    <sys:String x:Key="MustCharValidation_Language">تعداد کاراکتر های این کادر باید</sys:String>
+    <sys:String x:Key="MustSetValue_Language">وارد کردن این کادر لازم است.</sys:String>
+    <sys:String x:Key="PasswordNotValidate_Language">رمز قبلی با رمز جدید مطابقت نمی کند.</sys:String>
+    
+    <!--<sys:String x:Key="Saturday_English">Saturday</sys:String>
+    <sys:String x:Key="Sunday_English">Sunday</sys:String>
+    <sys:String x:Key="Monday_English">Monday</sys:String>
+    <sys:String x:Key="Tuesday_English">Tuesday</sys:String>
+    <sys:String x:Key="Wednesday_English">Wednesday</sys:String>
+    <sys:String x:Key="Thursday_English">Thursday</sys:String>
+    <sys:String x:Key="Friday_English">Friday</sys:String>-->
+</ResourceDictionary>

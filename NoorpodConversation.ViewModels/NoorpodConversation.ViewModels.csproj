@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8C034A13-ACE9-4511-9F9D-789269D3DD2A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NoorpodConversation.ViewModels</RootNamespace>
+    <AssemblyName>NoorpodConversation.ViewModels</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ComponentModels\RelayCommand.cs" />
+    <Compile Include="ControlHelpers\CustomViewModelHelepr.cs" />
+    <Compile Include="ControlHelpers\DataGridHelper.cs" />
+    <Compile Include="ControlHelpers\PopupAutoLocation.cs" />
+    <Compile Include="Converters\AnimationBindingConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\CommaSeparatedConverter.cs" />
+    <Compile Include="Converters\DateTimeToMonthNameConverter.cs" />
+    <Compile Include="Converters\DMarketDateTimeConverter.cs" />
+    <Compile Include="Converters\DoubleToGridLengthConverter.cs" />
+    <Compile Include="Converters\HasListItemsConverter.cs" />
+    <Compile Include="Converters\IsValidationWarningConverter.cs" />
+    <Compile Include="Converters\IntToThicknessConverter.cs" />
+    <Compile Include="Converters\IntToThicknessMultipeConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\IsFirstDayOfMonthConverter.cs" />
+    <Compile Include="Converters\LessThanNumberConverter.cs" />
+    <Compile Include="Converters\ListBoxItemEvenOddConverter.cs" />
+    <Compile Include="Converters\ListBoxItemToColumnIndexConverter.cs" />
+    <Compile Include="Converters\ListBoxItemToRowIndexConverter.cs" />
+    <Compile Include="Converters\ListValueSelectorConverter.cs" />
+    <Compile Include="Converters\MultipePersianDateTimeConverter.cs" />
+    <Compile Include="Converters\ParameterToStyleConverter.cs" />
+    <Compile Include="Converters\PersianDateTimeConverter.cs" />
+    <Compile Include="Converters\PersianDateTimeIsFridayConverter.cs" />
+    <Compile Include="Converters\TimeSpanToDaysConverter.cs" />
+    <Compile Include="Converters\TimeSpanToDurationConverter.cs" />
+    <Compile Include="Converters\ValidationErrorsToFirstErrorContentConverter.cs" />
+    <Compile Include="Drawing\RenderControlToBitmap.cs" />
+    <Compile Include="Drawing\Shapes\Chevron.cs" />
+    <Compile Include="Drawing\Shapes\Diamond.cs" />
+    <Compile Include="Drawing\Shapes\Hexagon.cs" />
+    <Compile Include="Drawing\Shapes\Label.cs" />
+    <Compile Include="Drawing\Shapes\RoundedSidesRectangle.cs" />
+    <Compile Include="Drawing\Shapes\SpeechBubble.cs" />
+    <Compile Include="Drawing\Shapes\Triangle.cs" />
+    <Compile Include="Helpers\AnimationActionRunner.cs" />
+    <Compile Include="Helpers\AnimationBindingsHelper.cs" />
+    <Compile Include="Helpers\AnimationsHelper.cs" />
+    <Compile Include="Helpers\ApplicationHelper.cs" />
+    <Compile Include="Helpers\DragAndDropReleaseHelper.cs" />
+    <Compile Include="Helpers\IDraggable.cs" />
+    <Compile Include="Helpers\PasswordHelper.cs" />
+    <Compile Include="Helpers\SizeObserver.cs" />
+    <Compile Include="Helpers\ValidationCheckRuleHelper.cs" />
+    <Compile Include="Helpers\ViewsUtility.cs" />
+    <Compile Include="Management\OS.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\SingleApplication\SingleInstance.cs" />
+    <Compile Include="Validations\EmptyValidationRule.cs" />
+    <Compile Include="Validations\LengthValidationRule.cs" />
+    <Compile Include="Validations\IntValidationRule.cs" />
+    <Compile Include="Validations\TwoDateTimeValidationRule.cs" />
+    <Compile Include="Validations\ValidationCheckRule.cs" />
+    <Compile Include="Views\LoginPageViewModel.cs" />
+    <Compile Include="Views\MainWindowViewModel.cs" />
+    <Compile Include="Views\MessengerPageViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Github\SignalGo-full-net\SignalGo.Shared\SignalGo.Shared.csproj">
+      <Project>{5a93c3f0-4653-435a-9e3d-e12a768138ca}</Project>
+      <Name>SignalGo.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NoorpodConversation.BaseViewModels\NoorpodConversation.BaseViewModels.csproj">
+      <Project>{4e1c10ad-5cde-4752-a8f6-f88592b3c126}</Project>
+      <Name>NoorpodConversation.BaseViewModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NoorpodConversation.Models\NoorpodConversation.Models.csproj">
+      <Project>{39462077-89DA-4B93-92C9-B32640EDED80}</Project>
+      <Name>NoorpodConversation.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

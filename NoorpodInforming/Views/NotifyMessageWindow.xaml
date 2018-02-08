@@ -1,0 +1,26 @@
+﻿<Window x:Class="NoorpodInforming.Views.NotifyMessageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       xmlns:ctrl="clr-namespace:NoorpodPortableResources;assembly=NoorpodPortableResources"
+        xmlns:Controls="clr-namespace:NoorpodInforming.Views"
+        mc:Ignorable="d"
+        Title="NotifyWindow" Height="80" ShowActivated="False" Width="280" WindowStartupLocation="Manual" ShowInTaskbar="False" Focusable="False" WindowStyle="None" WindowState="Normal" ResizeMode="NoResize">
+    <Button Focusable="False">
+        <Button.Template>
+            <ControlTemplate>
+                <Border BorderBrush="#666666" BorderThickness="1" Background="#F2F2F2">
+                    <Grid>
+                        <TextBlock x:Name="titleText" TextTrimming="CharacterEllipsis" Margin="10" VerticalAlignment="Top" FlowDirection="RightToLeft" Foreground="#FF686868">
+                            <Run Text="{Binding Title}" Foreground="#FF1E7BA6"/>
+                            <Run Text="ا" Foreground="Transparent"/>
+                            <Run Text=": "/>
+                            <Run Text="{Binding Message}"/>
+                        </TextBlock>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Button.Template>
+    </Button>
+</Window>
